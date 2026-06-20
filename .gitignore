@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node Modules
+node_modules/
+
+# Vite / frontend
+*.local
+
+# OS files
+.DS_Store
+Thumbs.db
