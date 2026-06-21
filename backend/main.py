@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import psycopg
 import os
 
 load_dotenv()
@@ -12,6 +13,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 
+# CORS
 origins = [
     "http://127.0.0.1:5173",      # Local Vite dev server
 ]
@@ -27,3 +29,20 @@ app.add_middleware(
 @app.get("/health")
 async def root():
     return {"message": "ok"}
+
+@app.get("/db-health")
+async def connect():
+    try:
+        with psycopg.connect(dbname = DB_NAME,
+                        port = DB_PORT, 
+                        user = DB_USER, 
+                        password = DB_PASSWORD, 
+                        host = DB_HOST) as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+                print(cur.fetchone())
+                return {"message": "ok"}
+    except: 
+        return {"message": "error"}
+    
+        
