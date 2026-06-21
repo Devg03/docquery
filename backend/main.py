@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import UploadFile, File
 from dotenv import load_dotenv
 import psycopg
 import os
@@ -31,7 +32,7 @@ async def root():
     return {"message": "ok"}
 
 @app.get("/db-health")
-async def connect():
+def db_health():
     try:
         with psycopg.connect(dbname = DB_NAME,
                         port = DB_PORT, 
@@ -42,7 +43,17 @@ async def connect():
                 cur.execute("SELECT 1")
                 print(cur.fetchone())
                 return {"message": "ok"}
-    except: 
+    except Exception as e: 
+        print(e)
         return {"message": "error"}
     
-        
+@app.post("/upload")
+async def upload_file(file: UploadFile):
+    contents = await file.read()
+    text = contents.decode("utf-8")
+    return {
+        "filename": file.filename,
+        "content_type": file.content_type,
+        "length": len(text),
+        "preview": text[:100],
+    }
