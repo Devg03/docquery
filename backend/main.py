@@ -51,9 +51,21 @@ def db_health():
 async def upload_file(file: UploadFile):
     contents = await file.read()
     text = contents.decode("utf-8")
+    chunks = chunk_text(text=text)
     return {
         "filename": file.filename,
         "content_type": file.content_type,
         "length": len(text),
-        "preview": text[:100],
+        "num_chunks": len(chunks),
+        "first_chunk": chunks[0] if chunks else "",
     }
+
+def chunk_text(text):
+    chunk_size = 1000
+    overlap = 200
+    chunks = list()
+    start = 0
+    while start < len(text):
+        chunks.append(text[start : start + chunk_size])
+        start = start + (chunk_size - overlap)
+    return chunks
