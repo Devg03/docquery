@@ -74,9 +74,9 @@ def chunk_text(text):
         start = start + (chunk_size - overlap)
     return chunks
 
-def embed_text(text):
+def embed_texts(chunks: list):
     response = client.embeddings.create(
         model = "text-embedding-3-small",
-        input = text
+        input = chunks
     )
-    return response.data[0].embedding
+    return [item.embedding for item in response.data]
