@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import UploadFile, File
 from dotenv import load_dotenv
+from openai import OpenAI
 import psycopg
 import os
 
@@ -13,6 +14,9 @@ DB_PORT = os.getenv("DB_PORT")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
+
+# OpenAI
+client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 
 # CORS
 origins = [
@@ -69,3 +73,10 @@ def chunk_text(text):
         chunks.append(text[start : start + chunk_size])
         start = start + (chunk_size - overlap)
     return chunks
+
+def embed_text(text):
+    response = client.embeddings.create(
+        model = "text-embedding-3-small",
+        input = text
+    )
+    return response.data[0].embedding
