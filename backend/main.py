@@ -70,10 +70,10 @@ async def upload_file(file: UploadFile):
                     "INSERT INTO chunks (content, embedding) VALUES (%s, %s)",
                     (content, embedding)
                 )
-        return {
-            "filename": file.filename,
-            "num_chunks": len(chunks),
-        }
+    return {
+        "filename": file.filename,
+        "num_chunks": len(chunks),
+    }
 
 def chunk_text(text):
     chunk_size = 1000
