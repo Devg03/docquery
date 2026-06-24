@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import UploadFile, File
 from dotenv import load_dotenv
 from openai import OpenAI
+from pgvector.psycopg import register_vector
 import psycopg
 import os
 
@@ -55,14 +56,24 @@ def db_health():
 async def upload_file(file: UploadFile):
     contents = await file.read()
     text = contents.decode("utf-8")
+
     chunks = chunk_text(text=text)
-    return {
-        "filename": file.filename,
-        "content_type": file.content_type,
-        "length": len(text),
-        "num_chunks": len(chunks),
-        "first_chunk": chunks[0] if chunks else "",
-    }
+    embeddings = embed_texts(chunks)
+
+    with psycopg.connect(
+        dbname=DB_NAME, port=DB_PORT, user=DB_USER, password=DB_PASSWORD, host=DB_HOST
+    ) as conn:
+        register_vector(conn)
+        with conn.cursor() as cur:
+            for content, embedding in zip(chunks, embeddings):
+                cur.execute(
+                    "INSERT INTO chunks (content, embedding) VALUES (%s, %s)",
+                    (content, embedding)
+                )
+        return {
+            "filename": file.filename,
+            "num_chunks": len(chunks),
+        }
 
 def chunk_text(text):
     chunk_size = 1000
