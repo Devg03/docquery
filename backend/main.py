@@ -4,6 +4,7 @@ from fastapi import UploadFile, File
 from dotenv import load_dotenv
 from openai import OpenAI
 from pgvector.psycopg import register_vector
+from pydantic import BaseModel
 import psycopg
 import os
 
@@ -91,3 +92,24 @@ def embed_texts(chunks: list):
         input = chunks
     )
     return [item.embedding for item in response.data]
+
+class AskRequest(BaseModel):
+    question: str
+
+@app.post("/ask")
+async def ask_Questions(request: AskRequest):
+    question_vector = embed_texts([request.question])[0]
+
+    with psycopg.connect(
+        dbname=DB_NAME, port=DB_PORT, user=DB_USER, password=DB_PASSWORD, host=DB_HOST
+    ) as conn:
+        register_vector(conn)
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT content FROM chunks ORDER by embedding <=> %s::vector LIMIT 3",
+                (question_vector,),
+            )
+            rows = cur.fetchall()
+    
+    results = [row[0] for row in rows]
+    return {"chunks": results}
