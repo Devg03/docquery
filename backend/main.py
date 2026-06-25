@@ -112,4 +112,25 @@ async def ask_Questions(request: AskRequest):
             rows = cur.fetchall()
     
     results = [row[0] for row in rows]
-    return {"chunks": results}
+    context = "\n\n---\n\n".join(results)
+    
+    system_message = {
+        "role": "system",
+        "content": (
+            "You are a document assistant. Answer the user's question using ONLY the context provided below. If the answer is not contained in the context, say you don't know based on the provided document - do not make up an answer."
+        ),
+    }
+
+    user_message = {
+        "role": "user",
+        "content": f"Context:\n{context}\n\nQuestions: {request.question}",
+    }
+
+    messages = [system_message, user_message]
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages
+    )
+    answer = response.choices[0].message.content
+
+    return {"answer": answer}
