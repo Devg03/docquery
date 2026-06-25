@@ -9,6 +9,9 @@ function App() {
   const [ file, setFile ] = useState(null)
   const [ uploadStatus, setUploadStatus ] = useState("")
 
+  const [ question, setQuestion ] = useState("")
+  const [ answer, setAnswer ] = useState("")
+
   useEffect(() => {
     async function loadHealth() {
       try {
@@ -49,15 +52,41 @@ function App() {
     } catch (error) {
       setStatus("Upload failed. Is the backend running?")
     }
+  }
+
+  async function handleAsk(question) {
+    if (!question) {
+      setStatus("Please enter a valid question.")
+      return
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/ask', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: question })
+      })
+
+      const data = await response.json()
+      setAnswer(data.answer)
+
+    } catch (error) {
+      setStatus("Question was not sent properly.")
+    }
 
   }
 
-
   return (
     <div>
+      
       <input type="file" onChange={handleFileChange} />
       <button onClick={() => sendToUpload(file)}>Upload</button>
       <p>{status}</p>
+
+      <input type="text" value={question} onChange={e => setQuestion(e.target.value)} />
+      <button onClick={() => handleAsk(question)}>Ask</button>
+      <p>{answer}</p>
+
     </div>
   )
 }
