@@ -11,11 +11,7 @@ import os
 load_dotenv()
 app = FastAPI()
 
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_NAME = os.getenv("DB_NAME")
+DOCKER_DB_URL = os.getenv("DOCKER_DB_URL")
 
 # OpenAI
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
@@ -38,11 +34,7 @@ async def root():
 @app.get("/db-health")
 def db_health():
     try:
-        with psycopg.connect(dbname = DB_NAME,
-                        port = DB_PORT, 
-                        user = DB_USER, 
-                        password = DB_PASSWORD, 
-                        host = DB_HOST) as conn:
+        with psycopg.connect(DOCKER_DB_URL) as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT 1")
                 print(cur.fetchone())
@@ -59,9 +51,7 @@ async def upload_file(file: UploadFile):
     chunks = chunk_text(text=text)
     embeddings = embed_texts(chunks)
 
-    with psycopg.connect(
-        dbname=DB_NAME, port=DB_PORT, user=DB_USER, password=DB_PASSWORD, host=DB_HOST
-    ) as conn:
+    with psycopg.connect(DOCKER_DB_URL) as conn:
         register_vector(conn)
         with conn.cursor() as cur:
             for content, embedding in zip(chunks, embeddings):
@@ -98,9 +88,7 @@ class AskRequest(BaseModel):
 async def ask_Questions(request: AskRequest):
     question_vector = embed_texts([request.question])[0]
 
-    with psycopg.connect(
-        dbname=DB_NAME, port=DB_PORT, user=DB_USER, password=DB_PASSWORD, host=DB_HOST
-    ) as conn:
+    with psycopg.connect(DOCKER_DB_URL) as conn:
         register_vector(conn)
         with conn.cursor() as cur:
             cur.execute(
