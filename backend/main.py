@@ -17,7 +17,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 
 # CORS
-origins = ["http://localhost:5173", "http://127.0.0.1:5173", "https://docquery-frontend-ik9i.onrender.com/"]
+origins = ["http://localhost:5173", "http://127.0.0.1:5173", "https://docquery-frontend-ik9i.onrender.com"]
 
 app.add_middleware(
     CORSMiddleware,
