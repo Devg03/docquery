@@ -30,7 +30,7 @@ function App() {
     }    
   }
 
-  async function sendToUpload(file) {
+  async function sendToUpload(file: File | null) {
 
     if (!file) {
       setStatus("Please choose a file first.")
