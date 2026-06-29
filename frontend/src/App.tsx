@@ -5,7 +5,7 @@ import './App.css'
 function App() {
   const [ status, setStatus ] = useState("loading...")
 
-  const [ file, setFile ] = useState(null)
+  const [file, setFile] = useState<File | null>(null)
 
   const [ question, setQuestion ] = useState("")
   const [ answer, setAnswer ] = useState("")
@@ -30,7 +30,7 @@ function App() {
     }    
   }
 
-  async function sendToUpload(file: File | null) {
+  async function sendToUpload(file) {
 
     if (!file) {
       setStatus("Please choose a file first.")
