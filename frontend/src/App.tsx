@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     async function loadHealth() {
       try {
-        const response = await fetch('http://localhost:8000/health')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/health`)
         const data = await response.json()
         setStatus(data.status)
       } catch(error) {
@@ -43,7 +43,7 @@ function App() {
     formData.append("file", file)
     
     try {
-      const response = await fetch('http://localhost:8000/upload', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
         method:"POST",
         body: formData,
       })
@@ -61,7 +61,7 @@ function App() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/ask', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: question })
