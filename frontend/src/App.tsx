@@ -75,8 +75,21 @@ function App() {
   }
 
   return (
+    /* Layout & Background */
     <div className='min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-12 px-4'>
       <div className='max-w-2xl mx-auto'>
+
+        {/* Header */}
+        <div className='text-center mb-10'>
+          <h1 className='text-4xl font-bold bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent'>
+            docquery
+          </h1>
+          <p className='text-gray-600 mt-2'>
+            Upload a document, ask anything, get answers from its contents.
+          </p>
+        </div> 
+        
+
         <input type="file" onChange={handleFileChange} />
         <button onClick={() => sendToUpload(file)}>Upload</button>
         <p>{status}</p>
