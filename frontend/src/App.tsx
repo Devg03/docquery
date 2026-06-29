@@ -90,10 +90,10 @@ function App() {
 
         {/* Header */}
         <div className='text-center mb-10'>
-          <h1 className='text-6xl font-bold bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent'>
+          <h1 className='text-8xl font-medium font-bitcount bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent'>
             docquery
           </h1>
-          <p className='text-gray-600 mt-2'>
+          <p className='text-2xl text-black-600 mt-2'>
             Upload a document, ask anything, get answers from its contents.
           </p>
         </div> 
@@ -101,7 +101,7 @@ function App() {
         {/* Upload Card */}
         <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6'>
           
-          <h2 className='text-lg front-semibold text-gray-800 mb-4'>
+          <h2 className='text-xl text-indigo-800 mb-4'>
             1. Upload a document
           </h2>
 
@@ -109,12 +109,12 @@ function App() {
             <input 
               type="file" 
               onChange={handleFileChange}
-              className='flex-1 text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600 file:font-medium hover:file:bg-indigo-100 cursor-pointer'
+              className='flex-1 text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600 file:font-bold hover:file:bg-indigo-100 cursor-pointer'
             />
             <button
               onClick={() => sendToUpload(file)}
               disabled={uploading}
-              className='px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition'>
+              className='px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition'>
                 {uploading ? "Uploading..." : "Upload"}
               </button>
           </div>
@@ -123,7 +123,7 @@ function App() {
 
         {/* Ask Card */}
         <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6'>
-          <h2 className='text-lg font-semibold text-gray-80 mb-4'>
+          <h2 className='text-xl text-gray-80 mb-4'>
             2. Ask a question
           </h2>
 
@@ -133,7 +133,7 @@ function App() {
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder='What is this document about?'
-              className='flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400'
+              className='flex-1 px-4 py-2 font-semibold rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400'
               />
             <button 
               onClick={() => handleAsk(question)}
