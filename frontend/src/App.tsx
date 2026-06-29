@@ -104,16 +104,41 @@ function App() {
             />
             <button
               onClick={() => sendToUpload(file)}
-                className="px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+                className='px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition'>
                   Upload
               </button>
           </div>
           {status && <p className='mt-3 text-sm text-gray-600'>{status}</p>}
         </div>
 
-          <input type="text" value={question} onChange={e => setQuestion(e.target.value)} />
-          <button onClick={() => handleAsk(question)}>Ask</button>
-          <p>{answer}</p>
+        {/* Ask Card */}
+        <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6'>
+          <h2 className='text-lg font-semibold text-gray-80 mb-4'>
+            2. Ask a question
+          </h2>
+
+          <div className='flex flex-col sm:flex-row gap-3'>
+            <input 
+              type="text"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder='What is this document about?'
+              className='flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-400'
+              />
+            <button 
+              onClick={() => handleAsk(question)}
+              className='px-5 py-2 rounded-lg bg-pink-600 text-whiet font-medium hover:bg-pink-700 transition'>
+              Ask
+            </button>
+          </div>
+
+          {answer && (
+            <div className='mt-5 p-4 rounded-xl bg-gradient-to-br from-indigo-50 to-pink-50 border border-indigo-100'>
+              <p className='text-gray-800 whitespace-pre-wrap'>{answer}</p>
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
   )
