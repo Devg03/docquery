@@ -10,6 +10,9 @@ function App() {
   const [ question, setQuestion ] = useState("")
   const [ answer, setAnswer ] = useState("")
 
+  const [ uploading, setUploading ] = useState(false)
+  const [ asking, setAsking ] = useState(false)
+
   useEffect(() => {
     async function loadHealth() {
       try {
@@ -37,6 +40,9 @@ function App() {
       return
     }
 
+    setUploading(true)
+    setStatus("")
+
     const formData = new FormData()
     formData.append("file", file)
     
@@ -50,6 +56,7 @@ function App() {
     } catch (error) {
       setStatus("Upload failed. Is the backend running?")
     }
+    setUploading(false)
   }
 
   async function handleAsk(question: string) {
@@ -57,6 +64,9 @@ function App() {
       setStatus("Please enter a valid question.")
       return
     }
+
+    setAsking(true)
+    setAnswer("")
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/ask`, {
@@ -67,11 +77,10 @@ function App() {
 
       const data = await response.json()
       setAnswer(data.answer)
-
     } catch (error) {
-      setStatus("Question was not sent properly.")
+      setAnswer("Question was not sent properly.")
     }
-
+    setAsking(false)
   }
 
   return (
@@ -104,8 +113,9 @@ function App() {
             />
             <button
               onClick={() => sendToUpload(file)}
-                className='px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition'>
-                  Upload
+              disabled={uploading}
+              className='px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition'>
+                {uploading ? "Uploading..." : "Upload"}
               </button>
           </div>
           {status && <p className='mt-3 text-sm text-gray-600'>{status}</p>}
@@ -127,14 +137,20 @@ function App() {
               />
             <button 
               onClick={() => handleAsk(question)}
+              disabled={asking}
               className='px-5 py-2 rounded-lg bg-pink-600 text-whiet font-medium hover:bg-pink-700 transition'>
-              Ask
+              {asking ? "Thinking..." : "Ask"}
             </button>
           </div>
 
-          {answer && (
+          {/* Answer Area */}
+          {(answer || asking) && (
             <div className='mt-5 p-4 rounded-xl bg-gradient-to-br from-indigo-50 to-pink-50 border border-indigo-100'>
-              <p className='text-gray-800 whitespace-pre-wrap'>{answer}</p>
+              {asking ? (
+                <p className='text-gray-500 italic'>Thinking...</p>
+              ) : (
+                <p className='text-gray-800 whitespace-pre-wrap'>{answer}</p>
+              )}
             </div>
           )}
         </div>
