@@ -75,16 +75,16 @@ function App() {
   }
 
   return (
-    <div>
-      
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={() => sendToUpload(file)}>Upload</button>
-      <p>{status}</p>
+    <div className='min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-12 px-4'>
+      <div className='max-w-2xl mx-auto'>
+        <input type="file" onChange={handleFileChange} />
+        <button onClick={() => sendToUpload(file)}>Upload</button>
+        <p>{status}</p>
 
-      <input type="text" value={question} onChange={e => setQuestion(e.target.value)} />
-      <button onClick={() => handleAsk(question)}>Ask</button>
-      <p>{answer}</p>
-
+        <input type="text" value={question} onChange={e => setQuestion(e.target.value)} />
+        <button onClick={() => handleAsk(question)}>Ask</button>
+        <p>{answer}</p>
+      </div>
     </div>
   )
 }
