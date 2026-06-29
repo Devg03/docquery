@@ -40,7 +40,7 @@ def db_health():
                 print(cur.fetchone())
                 return {"message": "ok"}
     except Exception as e: 
-        return {"message": "error", "detail": str(e)}
+        print(e)
     
 @app.post("/upload")
 async def upload_file(file: UploadFile):
