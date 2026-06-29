@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
-
+import React from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
   const [ status, setStatus ] = useState("loading...")
 
   const [ file, setFile ] = useState(null)
-  const [ uploadStatus, setUploadStatus ] = useState("")
 
   const [ question, setQuestion ] = useState("")
   const [ answer, setAnswer ] = useState("")
@@ -26,13 +24,13 @@ function App() {
     loadHealth()
   }, [])
 
-  function handleFileChange(event) {
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       setFile(event.target.files[0])
     }    
   }
 
-  async function sendToUpload(file) {
+  async function sendToUpload(file: File | null) {
 
     if (!file) {
       setStatus("Please choose a file first.")
@@ -54,7 +52,7 @@ function App() {
     }
   }
 
-  async function handleAsk(question) {
+  async function handleAsk(question: string) {
     if (!question) {
       setStatus("Please enter a valid question.")
       return
