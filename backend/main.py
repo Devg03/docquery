@@ -11,7 +11,7 @@ import os
 load_dotenv()
 app = FastAPI()
 
-DOCKER_DB_URL = os.getenv("DOCKER_DB_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # OpenAI
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
@@ -34,7 +34,7 @@ async def root():
 @app.get("/db-health")
 def db_health():
     try:
-        with psycopg.connect(DOCKER_DB_URL) as conn:
+        with psycopg.connect(DATABASE_URL) as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT 1")
                 print(cur.fetchone())
@@ -50,7 +50,7 @@ async def upload_file(file: UploadFile):
     chunks = chunk_text(text=text)
     embeddings = embed_texts(chunks)
 
-    with psycopg.connect(DOCKER_DB_URL) as conn:
+    with psycopg.connect(DATABASE_URL) as conn:
         register_vector(conn)
         with conn.cursor() as cur:
             for content, embedding in zip(chunks, embeddings):
@@ -87,7 +87,7 @@ class AskRequest(BaseModel):
 async def ask_Questions(request: AskRequest):
     question_vector = embed_texts([request.question])[0]
 
-    with psycopg.connect(DOCKER_DB_URL) as conn:
+    with psycopg.connect(DATABASE_URL) as conn:
         register_vector(conn)
         with conn.cursor() as cur:
             cur.execute(
