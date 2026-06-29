@@ -89,14 +89,31 @@ function App() {
           </p>
         </div> 
         
+        {/* Upload Card */}
+        <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6'>
+          
+          <h2 className='text-lg front-semibold text-gray-800 mb-4'>
+            1. Upload a document
+          </h2>
 
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={() => sendToUpload(file)}>Upload</button>
-        <p>{status}</p>
+          <div className='flex flex-col sm:flex-row gap-3'>
+            <input 
+              type="file" 
+              onChange={handleFileChange}
+              className='flex-1 text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-600 file:font-medium hover:file:bg-indigo-100 cursor-pointer'
+            />
+            <button
+              onClick={() => sendToUpload(file)}
+                className="px-5 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+                  Upload
+              </button>
+          </div>
+          {status && <p className='mt-3 text-sm text-gray-600'>{status}</p>}
+        </div>
 
-        <input type="text" value={question} onChange={e => setQuestion(e.target.value)} />
-        <button onClick={() => handleAsk(question)}>Ask</button>
-        <p>{answer}</p>
+          <input type="text" value={question} onChange={e => setQuestion(e.target.value)} />
+          <button onClick={() => handleAsk(question)}>Ask</button>
+          <p>{answer}</p>
       </div>
     </div>
   )
